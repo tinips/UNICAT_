@@ -32,52 +32,39 @@ UNICAT_/
 ├─ [requirements.txt](http://_vscodecontentref_/1)
 └─ [README.md](http://_vscodecontentref_/2)
 ```
-🧰 Tech Stack
-Backend: Django, Django REST Framework
-Frontend: HTML templates, JavaScript, Bootstrap
-Database: PostgreSQL (via psycopg2), SQLite for dev
-Static & Media: WhiteNoise (local), AWS S3 (via boto3 + django-storages)
-Config: python-decouple for environment variables
-Deployment: Gunicorn + production server (e.g., Heroku, Render, or AWS)
-🚀 Getting Started (Local)
-1) Clone & Setup
-2) Environment Variables
-Create a .env file in the project root with:
+## 🧰 Tech Stack
 
-Use python-decouple to load these values in settings.py.
+- **Backend**: Django, Django REST Framework  
+- **Frontend**: HTML templates, JavaScript, Bootstrap  
+- **Database**: PostgreSQL (via psycopg2), SQLite for dev  
+- **Static & Media**: WhiteNoise (local), AWS S3 (via boto3 + django-storages)  
+- **Config**: python-decouple for environment variables  
+- **Deployment**: Gunicorn + production server (e.g., Heroku, Render, or AWS)
 
-3) Database Migrations
-4) Import Erasmus Countries
-5) Run Development Server
-Visit → http://127.0.0.1:8000/
+---
+## 🧭 Main Screens
 
-🧭 Main Screens
-Dashboard: home for authenticated users
-Resources: list, upload, detail, comments
-Events: list, detail, create/edit form
-Erasmus: search/filter by country & university; register form
-Auth: login/register with university selection
-📦 Dependencies
-Install all dependencies with:
+- **Dashboard**: home for authenticated users  
+- **Resources**: list, upload, detail, comments  
+- **Events**: list, detail, create/edit form  
+- **Erasmus**: search/filter by country & university; connect form  
+- **Auth**: login/register with university selection  
 
-Key packages:
+---
+## 🌐 Live Demo
 
-django — web framework
-djangorestframework — REST API support
-Pillow — image/file handling
-gunicorn — production WSGI server
-psycopg2-binary — PostgreSQL driver
-python-decouple — environment variable management
-whitenoise — static file serving
-boto3, django-storages — AWS S3 storage integration
-🛡️ Deployment Notes
-Set DEBUG=False and configure ALLOWED_HOSTS in production
-Use PostgreSQL instead of SQLite for production
-Store static & media files on AWS S3 (configured via django-storages)
-Run with gunicorn behind Nginx or on a platform like Heroku/Render
-📜 License
-This project currently has no explicit license. Add a LICENSE file if you want to open-source it (e.g., MIT).
+You can visit the live app and create an account here:  
+👉 [http://unicat-app.ddns.net/](http://unicat-app.ddns.net/)
 
-👤 Author
-Built by tinips as part of the CS50W final project.
+---
+
+## 🔗 More Information
+
+I wrote 3 detailed posts on LinkedIn explaining the project:  
+👉 [My LinkedIn Profile](https://www.linkedin.com/in/albertárboles)
+
+## 👤 Author
+
+Built by **Albert Árboles**  
 Feedback and contributions are welcome!
+
