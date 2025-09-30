@@ -71,7 +71,6 @@ I wrote 3 detailed posts on LinkedIn explaining the project:
 Built by **Albert Árboles**  
 Feedback and contributions are welcome!
 
----
 > **Note:** This project was developed as part of my CS50W final project.  
 > Some frontend code (CSS/JS) is not fully optimized, since the main focus was learning and functionality.  
 > Future improvements may include refactoring the frontend for cleaner structure and maintainability.
