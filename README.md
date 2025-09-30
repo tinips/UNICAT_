@@ -32,6 +32,8 @@ UNICAT_/
 ├─ requirements.txt
 └─ README.md
 ```
+---
+
 ## 🧰 Tech Stack
 
 - **Backend**: Django, Django REST Framework  
