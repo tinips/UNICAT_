@@ -31,7 +31,7 @@ UNICAT_/
 ├─ [manage.py](http://_vscodecontentref_/0)
 ├─ [requirements.txt](http://_vscodecontentref_/1)
 └─ [README.md](http://_vscodecontentref_/2)
-
+```
 🧰 Tech Stack
 Backend: Django, Django REST Framework
 Frontend: HTML templates, JavaScript, Bootstrap
