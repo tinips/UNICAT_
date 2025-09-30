@@ -22,15 +22,15 @@ The backend is built with **Django + Django REST Framework**, and the frontend u
 ```text
 UNICAT_/
 ├─ finalproject/
-├─ jsons/                     # Datasets/config JSON if any
+├─ jsons/                     # Datasets
 ├─ unicat/                    # Django project (apps, templates, static, admin, etc.)
 │   ├─ templates/             # HTML templates (layout, home, resources, events, erasmus…)
-│   ├─ static/                # CSS/JS assets
-│   └─ management/commands/   # import_countries (Erasmus module)
+│   ├─ static/                # CSS/JS and images
+│   └─ management/commands/   
 ├─ .gitignore
-├─ [manage.py](http://_vscodecontentref_/0)
-├─ [requirements.txt](http://_vscodecontentref_/1)
-└─ [README.md](http://_vscodecontentref_/2)
+├─ manage.py
+├─ requirements.txt
+└─ README.md
 ```
 ## 🧰 Tech Stack
 
