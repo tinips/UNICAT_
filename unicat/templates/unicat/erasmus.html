@@ -1,0 +1,321 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+{% block title %}
+    Exchange Connect - Unicat
+{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/bookmark-icon-erasmus.css' %}?{% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'unicat/css/erasmus.css' %}?{% now 'U' %}">
+    <!-- ✅ Add multi-select styles -->
+{% endblock %}
+{% block body %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-2">Exchange Programs</h1>
+            <p class="lead">Find and connect with students going to the same university as you</p>
+        </div>
+    </div>
+    
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-lg-3 col-md-6">
+                    <label for="universitySearch" class="form-label">Search by University</label>
+                    <input type="text" class="form-control search-uni" id="universitySearch" placeholder="Enter university name...">
+                </div>
+                
+                <!-- Multi-select Country Filter -->
+                <div class="col-lg-3 col-md-6">
+                    <label for="countryFilter" class="form-label">Filter by Country</label>
+                    <div class="multi-select-dropdown" id="countrySelect">
+                        <div class="multi-select-button" onclick="toggleCountryDropdown()">
+                            <div class="selected-display">
+                                <span id="countryPlaceholderText" class="text-muted">All Countries</span>
+                                <div id="countrySelectedTags"></div>
+                            </div>
+                            <span class="dropdown-arrow">
+                                <i class="fas fa-chevron-down"></i>
+                            </span>
+                        </div>
+                        
+                        <div class="multi-select-options" id="countryOptionsContainer">
+                            <div class="search-box">
+                                <input type="text" class="search-input" 
+                                       placeholder="Search countries..." 
+                                       oninput="filterCountryOptions(this.value)">
+                            </div>
+                            <div id="countryOptionsList">
+                                <!-- Options will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Hidden input for form compatibility -->
+                    <input type="hidden" id="countryFilter" name="countryFilter">
+                </div>
+                
+                <!-- Favorites filter -->
+                <div class="col-lg-2 col-md-6 ">
+                    <label for="favoritesFilter" class="form-label">Filter by</label>
+                    <select class="form-select filter-by" id="favoritesFilter">
+                        <option value="">All Programs</option>
+                        <option value="favorites">Favorite</option>
+                        <option value="not_favorites">Not Favorite</option>
+                    </select>
+                </div>
+                <div class="col-lg-4 col-md-12 ">
+                    <label for="sortFilter" class="form-label">Sort by</label>
+                    <select class="form-select sort-by" id="sortFilter">
+                        <option value="">Best QS Rank</option>
+                        <option value="qs_rank_asc">Worst QS Rank</option>
+                        <option value="rating_desc">Highest Rated</option>
+                        <option value="rating_asc">Lowest Rated</option>
+                        <option value="name_asc">University Name (A-Z)</option>
+                        <option value="name_desc">University Name (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 text-end">
+                    <a href="#" class="clear-search mt-2" onclick="clearFilters(); return false;">
+                        <i class="fas fa-times"></i> Clear all filters
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <p class="mb-0">
+            <span id="filteredCount">{{ page_obj.object_list|length }}</span> 
+            of <span id="totalCount">{{ total_count }}</span> exchanges
+            <span id="searchInfo" class="text-muted d-none">(filtered results)</span>
+        </p>        
+        <p class="mb-0 text-muted" id="pageInfo">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </p>
+    </div>
+
+    <!-- Programs list remains the same -->
+    <div class="row g-4" style="padding-bottom: 30px;" id="programsList">
+        {% if erasmus_programs %}
+            {% for program in erasmus_programs %}
+            <div class="col-lg-3 col-md-4 col-sm-6 program-card" 
+                 data-university="{{ program.university }}" 
+                 data-country="{{ program.country_code.name }}">
+                <div class="card h-100 shadow-sm erasmus-card">
+                    <!-- Card header with logo and ranking -->
+                    <div class="card-header bg-white p-3 d-flex justify-content-between align-items-start border-0 position-relative">
+                        <!-- Bookmark icon in top left (like Instagram save) with bright color -->
+                        <div class="bookmark-icon position-absolute">
+                            <i class="favorite-icon {% if program.id in user_favorites %}fas text-primary{% else %}far text-primary{% endif %} fa-bookmark" 
+                               data-program-id="{{ program.id }}" 
+                               data-bs-toggle="tooltip" 
+                               data-bs-placement="top">
+                            </i>
+                        </div>
+                        
+                        <div class="university-logo-container">
+                            {% if program.static_image %}
+                                <!-- Nou sistema: imatges estàtiques -->
+                                <img src="{% static 'unicat/images/erasmus/' %}{{ program.static_image }}" alt="{{ program.university }}" class="university-logo">
+                            
+                            {% else %}
+                                <!-- Imatge per defecte -->
+                                <img src="{% static 'unicat/images/university-placeholder.jpg' %}" alt="{{ program.university }}" class="university-logo">
+                            {% endif %}
+                        </div>
+                        {% if program.rank %}
+                        <div class="university-rank">
+                            <span class="fas fa-university badge bg-primary"> #{{ program.rank }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Card body with university information -->
+                    <div class="card-body pt-0">
+                        <h5 class="card-title university-name" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ program.university }}">{{ program.university }}</h5>
+                        <div class="university-location">
+                            <i class="fa fa-map-marker-alt location-icon"></i>
+                            <span>{{ program.city }}, {{ program.country_code.name }}</span>
+                        </div>
+                        
+                        <!-- Additional statistics -->
+                        <div class="university-stats mt-3">
+                            <div class="stat-item">
+                                <i class="fa fa-users stat-icon"></i>
+                                <span>{{ program.participants.count }} students</span>
+                            </div>
+                            
+                            <!-- Add average rating stars -->
+                            <div class="stat-item mt-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="stars-display small"  style="letter-spacing: -1px;">
+                                        {% for _ in "12345" %}
+                                        {% if forloop.counter <= program.full_stars %}
+                                            {# Estrella plena #}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% elif forloop.counter == program.full_stars|add:"1" and program.has_half_star %}
+                                            {# Exactament una posició després de les plenes i hi ha mitja estrella #}
+                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                        {% else %}
+                                            {# Només buides #}
+                                            <i class="far fa-star text-warning"></i>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        <span class="ms-2 text-muted"  style="letter-spacing: 1px;">
+                                            {{ program.average_rating|floatformat:1 }}
+                                            <small>({{ program.reviews.count }})</small>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card footer with action buttons -->
+                    <div class="card-footer bg-white pt-0 border-top-0">
+                        <div class="d-flex justify-content-between align-items-center py-2">
+                            <!-- Left side - Connection status/button (or empty div) -->
+                            <div>
+                                {% if program == user_program %}
+                                    <button class="btn btn-sm btn-success" disabled>
+                                        <i class="fas fa-check me-1"></i>Connected
+                                    </button>
+                                {% elif user_program %}
+                                    <span class="text-muted small">
+                                         <!--<i class="fas fa-info-circle me-1"></i>Connected elsewhere-->
+                                    </span>
+                                {% else %}
+                                    <a href="{% url 'exchanges_form_with_program' program.id 1%}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-plus me-1"></i>Connect
+                                    </a>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Right side - View Details ALWAYS visible and ALWAYS on the right -->
+                            <div>
+                                <a href="{% url 'exchanges_detail' program.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <div class="py-5">
+                    <i class="fa fa-search fa-3x text-muted mb-3"></i>
+                    <h4>No exchanges found</h4>
+                    <p class="text-muted">Be the first to add your exchange program!</p>
+                    <a href="{% url 'exchanges_form' %}" class="btn btn-primary mt-2">
+                        Add Your Exchange
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagination remains the same -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav aria-label="Erasmus program pagination">
+                <ul class="pagination justify-content-center">
+                    <!-- First page -->
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;&laquo;</span>
+                        </li>
+                    {% endif %}
+                    
+                    <!-- Previous page -->
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                    {% endif %}
+                    
+                    <!-- Page numbers -->
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ i }}</span>
+                            </li>
+                        {% elif i > page_obj.number|add:'-4' and i < page_obj.number|add:'4' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <!-- Next page -->
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;</span>
+                        </li>
+                    {% endif %}
+                    
+                    <!-- Last page -->
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;&raquo;</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div id="noResultsMessage" class="col-12 text-center py-5 d-none">
+        <div class="py-5">
+            <i class="fa fa-search fa-3x text-muted mb-3"></i>
+            <h4>No matching exchange programs found</h4>
+            <p class="text-muted">Try adjusting your search filters</p>
+            <button onclick="clearFilters()" class="btn btn-primary mt-2">
+                Clear Filters
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+window.countriesData = [
+        {% for country in countries %}
+        {
+            code: "{{ country.code }}",
+            name: "{{ country.name }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+</script>
+<script src="{% static 'unicat/js/erasmus.js' %}"></script>
+
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+
+{% block title %}Resend Verification - UniCat{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/login.css' %}?{% now 'U' %}">
+{% endblock %}
+
+{% block body %}
+<div class="auth-container" style="margin-top: -60px;">
+    <div class="auth-wrapper" style="margin-top: -90px;">
+        <div class="auth-form-container">
+            <div class="auth-header">
+                <h2 class="auth-title">Resend Verification</h2>
+                <p class="auth-subtitle">Enter your email to resend verification link</p>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" 
+                           class="form-input" 
+                           id="email" 
+                           name="email" 
+                           value="{{ email|default:'' }}"
+                           required>
+                </div>
+                
+                <button type="submit" class="auth-submit-btn">
+                    <i class="fas fa-paper-plane me-2"></i>Resend Verification
+                </button>
+                
+                <div class="auth-links">
+                    <p><a href="{% url 'login' %}" class="auth-link">Back to Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

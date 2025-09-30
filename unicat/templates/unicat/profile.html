@@ -1,0 +1,470 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+
+{% block title %}
+    {% if is_own_profile %}
+        My Profile - UniCat
+    {% else %}
+        @{{ user.username }} - UniCat
+    {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/profile.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="container" style="margin-top: 2rem;">
+    <div class="row" style="margin-top: -10px;">
+        <!-- Columna de la foto de perfil i informació bàsica -->
+        <div class="col-md-4">
+            <div class="card shadow-sm profile-card">
+                <div class="card-body text-center position-relative">
+                    <!-- Edit button moved to top right -->
+                    {% if user.id == request.user.id %}
+                        <button class="btn btn-outline-primary btn-sm position-absolute top-0 end-0 m-2" 
+                                data-bs-toggle="modal" data-bs-target="#editProfileModal"
+                                style="z-index: 10;">
+                            <i class="fas fa-edit me-1"></i> Edit
+                        </button>
+                    {% endif %}
+                    
+                    <!-- Foto de perfil -->
+                    <div class="profile-picture-container mb-3">
+                        {% if profile and profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" class="rounded-circle profile-image" alt="Profile Picture">
+                        {% else %}
+                            <div class="default-profile-image d-flex justify-content-center align-items-center mx-auto" style="width: 120px; height: 120px;">
+                                <i class="fas fa-user-circle fa-5x text-primary"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Nom i username -->
+                    <div class="profile-basic-info">
+                        <h3 class="mb-1">{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</h3>
+                        <p class="text-muted mb-2">@{{ user.username }}</p>
+                        
+                        <!-- Universitat -->
+                        <span class="badge bg-primary">
+                            <i class="fas fa-university me-1"></i>
+                            {{ user.get_university_display|default:"No university set" }}
+                        </span>
+                    </div>
+                    
+                    <!-- Activity stats - Simple dynamic version -->
+                    <div class="activity-stats mt-3 pt-3 border-top" style="padding-bottom: 1rem;">
+                        <h5 class="mb-3 text-muted">Activity</h5>
+                        <div class="activity-items-container">
+                            <!-- Resources - Always show for everyone -->
+                            <div class="activity-item">
+                                <div class="activity-stat text-center">
+                                    <div class="activity-icon bg-light rounded p-1 mb-1 mx-auto" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-book-open text-primary" style="font-size: 0.8rem;"></i>
+                                    </div>
+                                    <div class="activity-number fw-bold text-primary">{{ user.resource_set.count }}</div>
+                                    <small class="activity-label text-muted">Resource{{ user.resource_set.count|pluralize }}</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Events - Only for institutions -->
+                            {% if has_permissions %}
+                            <div class="activity-item">
+                                <div class="activity-stat text-center">
+                                    <div class="activity-icon bg-light rounded p-1 mb-1 mx-auto" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-calendar-alt text-primary" style="font-size: 0.8rem;"></i>
+                                    </div>
+                                    <div class="activity-number fw-bold text-primary">{{ user.events_count }}</div>
+                                    <small class="activity-label text-muted">Event{{ user.events_count|pluralize }}</small>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="activity-item">
+                                <div class="activity-stat text-center">
+                                    <div class="activity-icon bg-light rounded p-1 mb-1 mx-auto" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-calendar-alt text-primary" style="font-size: 0.8rem;"></i>
+                                    </div>
+                                    <div class="activity-number fw-bold text-primary">{{ user.event_set.count }}</div>
+                                    <small class="activity-label text-muted">Event{{ user.event_set.count|pluralize }}</small>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Erasmus - Only show if user participated -->
+                            {% if user.erasmusparticipant_set.count > 0 and not has_permissions %}
+                            <div class="activity-item">
+                                <div class="activity-stat text-center">
+                                    <div class="activity-icon bg-light rounded p-1 mb-1 mx-auto" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-globe-europe text-primary" style="font-size: 0.8rem;"></i>
+                                    </div>
+                                    <div class="activity-number fw-bold text-primary">{{ user.erasmusparticipant_set.count }}</div>
+                                    <small class="activity-label text-muted">Exchange</small>
+                                </div>
+                            </div>
+                            {% elif not has_permissions %}
+                            <div class="activity-item">
+                                <div class="activity-stat text-center">
+                                    <div class="activity-icon bg-light rounded p-1 mb-1 mx-auto" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-globe-europe text-primary" style="font-size: 0.8rem;"></i>
+                                    </div>
+                                    <div class="activity-number fw-bold text-primary">0</div>
+                                    <small class="activity-label text-muted">Exchange</small>
+                                </div>
+                            </div>
+                            {% else %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Columna amb les dades del perfil -->
+        <div class="col-md-8">
+            <div class="card shadow-sm profile-info">
+                <div class="card-header">
+                    <h4 class="mb-0">Profile Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Primera fila: Email, Contact Info i City -->
+                        
+                        <div class="col-md-4 mb-3">
+                            <h6 class="text-muted">Contact Info</h6>
+                            <p>{{ profile.contact_info|default:"Not set" }}</p>
+                        </div>
+                        
+                      
+                            <div class="col-md-4 mb-3">
+                                <h6 class="text-muted">City</h6>
+                                <p>{{ profile.city|default:"Not set" }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                               
+                                {% if profile.linkedin_url %}
+                                    <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener" class="text-decoration-none">
+                                        <i class="fab fa-linkedin text-primary me-1"></i>
+                                        LinkedIn
+                                    </a>
+                                {% else %}
+                                 <h6 class="text-muted">LinkedIn</h6>
+                                    <span class="text-muted">Not set</span>
+                                {% endif %}
+                            </div>
+                       
+                            <!-- Segona fila: Bio ocupant tot l'ample -->
+                            <div class="col-12 mb-3">
+                                <h6 class="text-muted">Bio</h6>
+                                <p class="bio-section">{{ profile.bio|default:"No bio added yet"|linebreaksbr }}</p>
+
+                            </div>
+                            
+                            
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Secció Erasmus Program - només si l'usuari és el propietari del perfil -->
+    {% if is_own_profile and not has_permissions%}
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-globe-europe me-2"></i>
+                        Current Exchange Program
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if user_erasmus_program %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="university-name text-primary mb-2">
+                                    <i class="fas fa-university me-2"></i>
+                                    {{ user_erasmus_program.program.university }}
+                                </div>
+                                <div class="country-name text-muted mb-2">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    {{ user_erasmus_program.program.country_code.name }}
+                                </div>
+                                {% if user_erasmus_program.program.rank %}
+                                    <div class="mb-2">
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-trophy me-1"></i>
+                                            QS Rank #{{ user_erasmus_program.program.rank }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+                                <div class="program-dates">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <small class="text-muted">Start Date:</small>
+                                            <div><strong>{{ user_erasmus_program.start_date|date:"d M, Y" }}</strong></div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <small class="text-muted">End Date:</small>
+                                            <div><strong>{{ user_erasmus_program.end_date|date:"d M, Y" }}</strong></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <div class="d-flex flex-column gap-2" style="max-width: 200px; margin-left: auto;">
+                                    <a href="{% url 'exchanges_detail' user_erasmus_program.program.id %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> View Program
+                                    </a>
+                                    <a href="{% url 'exchanges' %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-list me-1"></i> Browse Programs
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center">
+                            <i class="fas fa-plane fa-2x text-muted mb-2"></i>
+                            <h6 class="text-muted">No Exchange Program Connected</h6>
+                            <p class="text-muted">Connect with students going to the same university for your Exchange experience!</p>
+                            <a href="{% url 'exchanges' %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-search me-1"></i> Find Programs
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Achievements Section -->
+    <div class="row mt-3" style="margin-bottom: 2rem;">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-trophy me-2"></i>
+                        Achievements
+                    </h5>
+                </div>
+                <div class="card-body">
+                  <!--  Afegir d-flex i justify-content-center per centrar dinàmicament -->
+                    <div class="row g-3 d-flex justify-content-center">
+                        <!-- Resource Contributor Badge -->
+                        {% if user.resource_set.count >= 5 %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="achievement-badge text-center p-3 border rounded">
+                                <i class="fas fa-book-open fa-2x text-primary mb-2"></i>
+                                <h6>Resource Contributor</h6>
+                                <small class="text-muted">Shared {{ user.resource_set.count }} resource{{ user.resource_set.count|pluralize }}</small>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Event Organizer Badge -->
+                        {% if user.events_count >= 3 and has_permissions %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="achievement-badge text-center p-3 border rounded">
+                                <i class="fas fa-calendar-alt fa-2x text-success mb-2"></i>
+                                <h6>Event Organizer</h6>
+                                <small class="text-muted">Organized {{ user.events_count }} event{{ user.events_count|pluralize }}</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if event_interested_num > 5 and not has_permissions %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="achievement-badge text-center p-3 border rounded">
+                                <i class="fas fa-calendar-alt fa-2x text-success mb-2"></i>
+                                <h6>Event Enthusiast</h6>
+                            <small class="text-muted">
+                                Showed interest in {{ event_interested_num }} event{{ event_interested_num|pluralize }}
+                            </small>                            
+                            </div>
+                        </div>
+                        {% endif %}
+                      
+
+                        <!-- Erasmus Explorer Badge -->
+                        {% if user.erasmusparticipant_set.count > 0 and not has_permissions %}
+                            
+                        <div class="col-md-6 col-lg-4">
+                            <div class="achievement-badge text-center p-3 border rounded">
+                                <i class="fas fa-globe-europe fa-2x text-warning mb-2"></i>
+                                <h6>Exchange Explorer</h6>
+                                <small class="text-muted">Connected to an Exchange program</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if user.resource_set.count < 5 and user.events_count < 3 and event_interested_num <= 5 and user.erasmusparticipant_set.count == 0 and not has_permissions %}
+                    <div class="text-center py-3">
+                        <i class="fas fa-star fa-2x text-muted mb-2"></i>
+                        <p class="text-muted">No achievements yet</p>
+                        {% if user.id == request.user.id %}
+                        <small class="text-muted">Start contributing to earn your first badge!</small>
+                        {% endif %}
+                                        {% endif %}
+
+                    {% if has_permissions and user.events_count < 3 and user.resource_set.count < 5 %}
+                    <div class="text-center py-3">
+                        <i class="fas fa-star fa-2x text-muted mb-2"></i>
+                        <p class="text-muted">No achievements yet</p>
+                        {% if user.id == request.user.id %}
+                        <small class="text-muted">Start contributing to earn your first badge!</small>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Section (for institutions) -->
+    {% if has_permissions %}
+    <div class="container-fluid" style="margin-bottom: 2rem;">
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Organized Events
+                            <span class="badge bg-success ms-2">{{ user.events_count }}</span>
+                        </h5>
+                        <a href="{% url 'events' %}?organizer={{ user.username }}" class="btn btn-outline-success btn-sm">
+                            View All
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if events_organized %}
+                            <div class="row g-3" style="max-height: 260px; overflow-y: auto;">
+                                {% for event in events_organized %}
+                                <div class="col-md-6">
+                                    <div class="event-card p-3 border rounded">
+                                        <h6 class="mb-1">
+                                            <a href="{% url 'event_detail' event.id %}" class="text-decoration-none">
+                                                {{ event.title|truncatechars:50 }}
+                                            </a>
+                                            <!--  Etiqueta expired si la data ha passat -->
+                                            {% now "Y-m-d H:i:s" as current_time %}
+                                            {% if event.date|date:"Y-m-d H:i:s" < current_time %}
+                                                <span class="badge bg-danger ms-2" style="font-size: 0.7rem;">
+                                                    <i class="fas fa-clock me-1"></i>Expired
+                                            </span>
+                                            {% endif %}
+                                        </h6>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>{{ event.date|date:"M d, Y" }}
+                                            <i class="fas fa-map-marker-alt me-1 ms-2"></i>{{ event.location|truncatechars:20 }}
+                                        </small>
+                                        <div class="mt-2">
+                                            <span class="badge bg-light text-dark">
+                                                <i class="fas fa-users me-1"></i>{{ event.participants.count }} interested
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-3">
+                                <i class="fas fa-calendar-plus fa-2x text-muted mb-2"></i>
+                                <p class="text-muted">No events organized yet</p>
+                                {% if user == request.user %}
+                                    <a href="{% url 'create_event' %}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-plus me-1"></i>Create Your First Event
+                                    </a>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% if user.id == request.user.id %}
+<!-- Modal d'edició del perfil -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- Informació bàsica de l'usuari -->
+                         <div class="col-12 mb-3">
+                            <label for="profile_picture" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*">
+                            {% if profile.profile_picture %}
+                                <small class="text-muted"><i class="fas fa-info-circle"></i> Upload a profile picture to replace the current one</small>
+                            {% else %}
+                                <small class="text-muted"><i class="fas fa-info-circle"></i> Upload a profile picture to set one</small>
+                            {% endif %}
+                            {% if profile.profile_picture %}
+                                <div class="mt-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="remove_picture" name="remove_picture">
+                                        <label class="form-check-label" for="remove_picture">
+                                            Remove current picture
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name|capfirst }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name|capfirst }}">
+                        </div>
+                       
+                        <div class="col-md-6 mb-3">
+                            <label for="university" class="form-label">University</label>
+                            <select class="form-select" id="university" name="university">
+                                {% for choice in university_choices %}
+                                    <option value="{{ choice.0 }}" {% if user.university == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Informació de perfil -->
+                        <div class="col-md-6 mb-3">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" name="city" value="{{ profile.city|default:'' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="contact-info" class="form-label">Contact Info</label>
+                            <input type="text" class="form-control" id="contact-info" name="contact-info" value="{{ profile.contact_info|default:'' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="linkedin_url" class="form-label">LinkedIn URL</label>
+                            <input type="url" class="form-control" id="linkedin_url" name="linkedin_url" value="{{ profile.linkedin_url|default:'' }}">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="10">{{ profile.bio|default:'' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary cancel-modal" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

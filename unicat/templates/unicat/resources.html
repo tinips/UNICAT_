@@ -1,0 +1,185 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+
+{% block title %}
+    Resources - Unicat
+{% endblock %}
+
+{% block body %}
+<div class="container resources-container">
+    <div class="resources-header">
+        <h1>Resources Hub</h1>
+        <p class="subtitle">Share and discover academic materials with the university community</p>
+    </div>
+
+    <div class="card upload-card">
+        <div class="card-header">
+            <h2>Share a Resource</h2>
+        </div>
+        
+        <div class="card-body">
+            <form action="{% url 'resources' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="document">File</label>
+                    <input type="file" class="form-control" id="document" name="document" >
+                </div>
+                <div class="form-group resource-form">
+                    <label for="description">Description <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="Describe your resource or add keywords" required></textarea>
+                </div>
+                <div class="form-group resource-form">
+                    <label for="field_study">Field of study <span class="text-danger">*</span></label>
+                    <select class="form-control" id="field_study" name="field_study" required>
+                        <option value="" disabled selected>Select the field of study</option>
+                        {% for field in fields %}
+                            <option value="{{ field }}">{{ field }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group resource-form2">
+                    <label for="category">Category <span class="text-danger">*</span></label>
+                    <select class="form-control" id="category" name="category" required>
+                        <option value="" disabled selected>Select a category</option>
+                        {% for choice in categories %}
+                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload Resource</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <div class="row">
+            <div class="col-md-3">
+                <h3>Browse Resources</h3>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search resources..." 
+                           id="resourceSearch">
+                    <input type="hidden" name="category" value="{{ selected_category }}">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="filter-controls">
+                    <select class="form-control" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        {% for choice in categories %}
+                            <option value="{{ choice.0 }}" {% if selected_category == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="filter-controls">
+                    <select class="form-control" id="fieldStudyFilter">
+                        <option value="">All Fields of Study</option>
+                        {% for field in fields %}
+                            <option value="{{ field }}">{{ field }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <a href="#" class="clear-search" onclick="clearSearch(); return false;">
+                <i class="fas fa-times"></i> Clear all filters
+            </a>
+        </div>
+    </div>
+
+    <div id="resources-container">
+        <!-- Vue.js will mount here -->
+    </div>
+
+<div class="modal fade" id="editResourceModal" tabindex="-1" aria-labelledby="editResourceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editResourceModalLabel">Edit Resource</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editResourceForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" id="edit-resource-id" name="resource_id">
+                    
+                    <div class="mb-3">
+                        <label for="edit-document" class="form-label">File</label>
+                        <input type="file" class="form-control" id="edit-document" name="document">
+                        <small class="form-text text-muted">Leave empty to keep current file.</small>
+                    </div>
+                    
+                    <!-- Checkbox per eliminar el fitxer actual -->
+                    <div class="mb-3" id="current-file-section" style="display: none;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="alert alert-info d-inline-flex align-items-center mb-0 px-3 py-2">
+                                <i class="fas fa-file me-2"></i>
+                                <span><strong>Current file:</strong> <span id="current-file-name">No file</span></span>
+                            </div>
+                            <div class="form-check mb-0">
+                                <input class="form-check-input" type="checkbox" id="delete-current-file" name="delete_current_file" value="true">
+                                <label class="form-check-label text-danger" for="delete-current-file">
+                                    <i class="fas fa-trash me-1"></i>
+                                    Delete current file
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit-description" class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="edit-description" name="description" rows="10" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-field-study" class="form-label">Field of Study <span class="text-danger">*</span></label>
+                        <select class="form-control" id="edit-field-study" name="field_study" required>
+                            {% for field in fields %}
+                                <option value="{{ field }}">{{ field }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit-category" class="form-label">Category <span class="text-danger">*</span></label>
+                        <select class="form-control" id="edit-category" name="category" required>
+                            {% for choice in categories %}
+                                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary cancel-modal" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteResourceModal" tabindex="-1" aria-labelledby="deleteResourceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteResourceModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "<span id="delete-resource-name"></span>"?</p>
+                <p class="text-danger">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancel-modal-delete" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'unicat/js/resources.js' %}"></script>
+
+
+{% endblock %}

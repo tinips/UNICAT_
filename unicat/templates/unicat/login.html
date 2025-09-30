@@ -1,0 +1,81 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+
+{% block title %}
+    Login - UniCat
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/login.css' %}?{% now 'U' %}">
+
+{% endblock %}
+
+{% block body %}
+<div class="auth-container" style="margin-top: -60px;">
+    <div class="auth-wrapper "style="margin-top: -90px;">
+        <div class="auth-form-container">
+            <div class="auth-header">
+                <h2 class="auth-title">Welcome Back</h2>
+                <p class="auth-subtitle">Sign in to access your UniCat account</p>
+            </div>
+            
+            <form class="auth-form" action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                
+                {% if messages %}
+                    <div class="alert-container">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" 
+                           class="form-input" 
+                           id="username" 
+                           name="username" 
+                           value="{{ username|default:'' }}" 
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="password-field-wrapper">
+                        <input type="password" 
+                               class="form-input" 
+                               id="password" 
+                               name="password" 
+                               value="{{ password|default:'' }}" 
+                               required>
+                        <span class="password-toggle" onclick="togglePassword('password', this)"></span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="auth-submit-btn">
+                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                </button>
+                
+                <div class="auth-links">
+                    <p>Don't have an account? <a href="{% url 'register' %}" class="auth-link">Sign up</a></p>
+                    <p><a href="{% url 'resend_verification' %}" class="auth-link">Resend verification email</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId, toggleElement) {
+    const passwordField = document.getElementById(fieldId);
+    const isPassword = passwordField.type === 'password';
+    
+    passwordField.type = isPassword ? 'text' : 'password';
+    toggleElement.classList.toggle('show', isPassword);
+    toggleElement.classList.toggle('active', isPassword);
+}
+</script>
+{% endblock %}

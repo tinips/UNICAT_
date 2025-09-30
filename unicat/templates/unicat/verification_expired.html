@@ -1,0 +1,31 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+
+{% block title %}Link Expired - UniCat{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/login.css' %}?{% now 'U' %}">
+{% endblock %}
+
+{% block body %}
+<div class="auth-container" style="margin-top: -60px;">
+    <div class="auth-wrapper" style="margin-top: -90px;">
+        <div class="auth-form-container" style="text-align: center;">
+            <div class="auth-header">
+                <i class="fas fa-clock fa-3x text-warning mb-3"></i>
+                <h2 class="auth-title">Verification Link Expired</h2>
+                <p class="auth-subtitle">This verification link has expired</p>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <p class="text-muted">Please register again to create a new account.</p>
+            </div>
+            
+            <div class="auth-links">
+                <p><a href="{% url 'register' %}" class="auth-link">Register Again</a></p>
+                <p><a href="{% url 'login' %}" class="auth-link">Back to Login</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

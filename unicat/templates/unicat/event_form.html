@@ -1,0 +1,239 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+{% block title %}{% if event %}Edit Event{% else %}Create Event{% endif %} | Unicat{% endblock %}
+{% block body %}
+
+<div class="container mt-5" style="margin-bottom: 40px;">
+    <div class="row justify-content-center ">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        {% if event %}
+                            <i class="fas fa-edit me-2"></i>Edit Event
+                        {% else %}
+                            <i class="fas fa-plus me-2"></i>Create New Event
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body">
+
+                    <form method="POST" class="needs-validation" enctype="multipart/form-data" novalidate id="event-form" >
+                        {% csrf_token %}
+                        {% if event %}
+                            <input type="hidden" name="source" value="{{ request.GET.source }}">
+                        {% endif %}
+
+                        <div class="form-group mb-3">
+                            <label for="image" class="form-label">Event Image</label>
+                            {% if event and event.image %}
+                                <div class="current-image mb-3">
+                                    <img src="{{ event.image.url }}" class="img-thumbnail" style="max-height: 150px;">
+                                    <div class="form-check mt-2">
+                                        <input type="checkbox" id="remove_image" name="remove_image">
+                                        <label for="remove_image">
+                                            Remove current image
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <input type="file" class="form-control {% if form.image.errors %}is-invalid{% endif %}" 
+                                id="image" name="{% if event %}event_image{% else %}image{% endif %}" accept="image/*">
+                            {% if form.image.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.image.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                {% if image %}Upload a new image to replace the current one{% else %}Upload an attractive image for your event{% endif %}
+                            </small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="program_file" class="form-label">Event Program</label>
+                            {% if event and event.program_file %}
+                                <div class="current-program mb-3">
+                                    <div class="alert alert-info d-flex align-items-center">
+                                        {% if event.program_file.name|slice:"-4:" == ".pdf" %}
+                                            <i class="fas fa-file-pdf me-2 text-danger"></i>
+                                            <span>Current program: <a href="{{ event.program_file.url }}" target="_blank" class="alert-link">{{ event.program_file.name }}</a></span>
+                                        {% else %}
+                                            <i class="fas fa-file-image me-2 text-primary"></i>
+                                            <span>Current program: <a href="{{ event.program_file.url }}" target="_blank" class="alert-link">{{ event.program_file.name }}</a></span>
+                                            <img src="{{ event.program_file.url }}" class="img-thumbnail ms-2" style="max-height: 80px;">
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" id="remove_program" name="remove_program" class="form-check-input">
+                                        <label for="remove_program" class="form-check-label">
+                                            Remove current program file
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <input type="file" class="form-control {% if form.program_file.errors %}is-invalid{% endif %}" 
+                                id="program_file" name="{% if event %}event_program{% else %}program_file{% endif %}" 
+                                accept=".pdf,image/*">
+                            {% if form.program_file.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.program_file.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                {% if event.program_file %}Upload a new program to replace the current one{% else %} Upload the event flyer as PDF or image (JPG, PNG, etc.) {% endif %}
+                            </small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="title">Event Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control {% if form.title.errors %}is-invalid{% endif %}" 
+                                id="title" name="{% if event %}event_name{% else %}title{% endif %}" placeholder="Enter event title" 
+                                value="{% if event %}{{ event.title }}{% else %}{{ form.title|default:'' }}{% endif %}" required>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="description">Description <span class="text-danger">*</span></label>
+                            <textarea class="form-control {% if form.description.errors %}is-invalid{% endif %}" 
+                                id="description" name="{% if event %}event_description{% else %}description{% endif %}" rows="4" 
+                                placeholder="Describe your event" required>{% if event %}{{ event.description }}{% else %}{{ form.description|default:'' }}{% endif %}</textarea>
+                        </div>
+
+                        {% if event %}
+                            <!-- Datetime field para edición -->
+                            <div class="mb-3">
+                                <label for="datetime" class="form-label">Date and Time <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" id="datetime" name="event_date" 
+                                        value="{{ event.date|date:'Y-m-d' }}T{{ event.date|date:'H:i' }}" required>
+                                <small class="form-text text-muted">
+                                    Current: {{ event.date|date:'d/m/Y' }} at {{ event.date|date:'H:i' }}
+                                </small>
+                            </div>
+                        {% else %}
+                            <!-- Campos separados para fecha y hora en creación -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="date">Date <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control {% if form.date.errors %}is-invalid{% endif %}" 
+                                        id="date" name="date" value="{{ form.date|default:'' }}" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="time">Time <span class="text-danger">*</span></label>
+                                    <input type="time" class="form-control {% if form.time.errors %}is-invalid{% endif %}" 
+                                        id="time" name="time" value="{{ form.time|default:'' }}" required>
+                                </div>
+                            </div>
+                        {% endif %}
+                            
+                        <div class="mb-3">
+                            <label for="duration">Duration <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="duration" 
+                                name="{% if event %}event_duration{% else %}duration{% endif %}" 
+                                placeholder="Event duration" 
+                                value="{% if event %}{{ event.duration }}{% else %}{{ form.duration|default:'' }}{% endif %}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="location">Location <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="location" 
+                                name="{% if event %}event_location{% else %}location{% endif %}" 
+                                placeholder="Event location" 
+                                value="{% if event %}{{ event.location }}{% else %}{{ form.location|default:'' }}{% endif %}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Event Type <span class="text-danger">*</span></label>
+                            <select class="form-select" id="type" name="{% if event %}event_type{% else %}type{% endif %}" required>
+                                <option value="">Select Event Type</option>
+                                {% if event %}
+                                    {% for code, name in event_types %}
+                                        <option value="{{ code }}" {% if event.type == code %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for code, name in event_types %}
+                                        <option value="{{ code }}" {% if code == form.type|default:'' %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="university" class="form-label">University</label>
+                            <select class="form-select" id="university" name="{% if event %}event_university{% else %}university{% endif %}" >
+                                <option value="">Select University</option>
+                                {% if event %}
+                                    {% for code, name in universities %}
+                                        <option value="{{ code }}" {% if event.university == code %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for value, name in universities %}
+                                        <option value="{{ value }}" {% if value == form.university|default:'' %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        
+                        
+                        
+                        <div class="mb-3">
+                            <label for="faculty" class="form-label">Faculty</label>
+                            <input type="text" class="form-control" id="faculty" 
+                                name="{% if event %}event_faculty{% else %}faculty{% endif %}" 
+                                placeholder="Please specify a faculty" 
+                                value="{% if event %}{{ event.faculty }}{% else %}{{ form.faculty|default:'' }}{% endif %}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="inscription_url">Inscription URL</label>
+                            <input type="url" class="form-control" id="inscription_url" 
+                                name="inscription_url" 
+                                placeholder="URL for event registration" 
+                                value="{% if event %}{{ event.inscription_link|default:'' }}{% else %}{{ form.inscription_url|default:'' }}{% endif %}">
+                            <small class="form-text text-muted">
+                                Provide a link where participants can register for this event
+                            </small>
+                        </div>
+                        {% if event %}
+                            <div class="mb-3">
+                                <label for="organizer" class="form-label">Organizer</label>
+                                <input type="text" class="form-control" id="organizer" 
+                                    value="{{ event.created_by.username }}" disabled>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            {% if event %}
+                                {% if request.GET.source == 'events' %}
+                                    <a href="{% url 'events' %}" class="btn btn-outline-secondary cancel-btn">
+                                        <i></i>Cancel
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'event_detail' event.id %}" class="btn btn-outline-secondary cancel-btn">
+                                        <i></i>Cancel
+                                    </a>
+                                {% endif %}
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Save Changes
+                                </button>
+                            {% else %}
+                                <a href="{% url 'events' %}" class="btn btn-outline-secondary cancel-btn">
+                                    <i></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Create Event
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'unicat/js/layout.js' %}"></script>
+
+<script src="{% static 'unicat/js/event_form.js' %}"></script>
+{% endblock %}

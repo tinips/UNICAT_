@@ -1,0 +1,135 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+
+{% block title %}
+    Register - UniCat
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/register.css' %}?{% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'unicat/css/password-validation.css' %}?{% now 'U' %}">
+{% endblock %}
+
+{% block body %}
+<div class="auth-container">
+    <div class="auth-wrapper">
+        <div class="auth-form-container">
+            <div class="auth-header">
+                <h2 class="auth-title">Join UniCat</h2>
+                <p class="auth-subtitle">Create your account to connect with students</p>
+            </div>
+            
+            <form class="auth-form" action="{% url 'register' %}" method="post" id="register-form">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstname" class="form-label">First Name</label>
+                        <input type="text" 
+                               class="form-input" 
+                               id="firstname" 
+                               name="firstname" 
+                               value="{{ firstname|default:'' }}" 
+                               required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastname" class="form-label">Last Name</label>
+                        <input type="text" 
+                               class="form-input" 
+                               id="lastname" 
+                               name="lastname" 
+                               value="{{ lastname|default:'' }}" 
+                               required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" 
+                           class="form-input" 
+                           id="username" 
+                           name="username" 
+                           value="{{ username|default:'' }}" 
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" 
+                           class="form-input" 
+                           id="email" 
+                           name="email" 
+                           value="{{ email|default:'' }}" 
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="university" class="form-label">University</label>
+                    <select class="form-select" id="university" name="university">
+                        <option value="">Select your university</option>
+                        {% for choice in universities %}
+                            <option value="{{ choice.0 }}" 
+                                {% if university == choice.0 %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="password-field-wrapper">
+                            <input type="password" 
+                                   class="form-input" 
+                                   id="password" 
+                                   name="password" 
+                                   required>
+                            <span class="password-toggle" onclick="togglePassword('password', this)"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmation" class="form-label">Confirm Password</label>
+                        <div class="password-field-wrapper">
+                            <input type="password" 
+                                   class="form-input" 
+                                   id="confirmation" 
+                                   name="confirmation" 
+                                   required>
+                            <span class="password-toggle" onclick="togglePassword('confirmation', this)"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="auth-submit-btn" disabled>
+                    <i class="fas fa-user-plus me-2"></i>Create Account
+                </button>
+                
+                <div class="auth-links">
+                    <p>Already have an account? <a href="{% url 'login' %}" class="auth-link">Sign in</a></p>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Barra lateral per la validació de contrasenya -->
+        <div class="password-validation-sidebar" style="margin-bottom: 20px;">
+            <!-- El contingut s'inserirà aquí via JavaScript -->
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId, toggleElement) {
+    const passwordField = document.getElementById(fieldId);
+    const isPassword = passwordField.type === 'password';
+    
+    passwordField.type = isPassword ? 'text' : 'password';
+    toggleElement.classList.toggle('show', isPassword);
+    toggleElement.classList.toggle('active', isPassword);
+}
+</script>
+
+<script src="{% static 'unicat/js/password-validation.js' %}"></script>
+{% endblock %}

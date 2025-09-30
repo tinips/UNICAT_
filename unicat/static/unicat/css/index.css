@@ -1,0 +1,104 @@
+ .hero-section {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        position: relative;
+        overflow: hidden;
+        min-height: 300px;
+        margin-top: -1px;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.1);
+        opacity: 0.5;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .feature-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        height: 200px;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,123,255,0.15) !important;
+        border-color: #007bff;
+    }
+    
+    .feature-icon {
+        width: 40px;
+        height: 40px;
+        background: #007bff;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+    }
+    
+    .feature-card:hover .feature-icon {
+        transform: scale(1.05);
+        background: #0056b3;
+    }
+    
+    .why-section {
+        background: #f8f9fa;
+    }
+    
+    .benefit-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: transform 0.3s ease;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        height: 120px;
+    }
+    
+    .benefit-card:hover {
+        transform: translateY(-2px);
+        border-color: #007bff;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 1rem;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+        color: #6c757d;
+        margin-bottom: 2rem;
+    }
+    
+    .btn-modern {
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+    }
+    
+    .btn-modern:hover {
+        transform: translateY(-1px);
+    }
+    
+    .benefit-icon {
+        width: 24px;
+        height: 24px;
+        color: #007bff;
+        margin-right: 8px;
+    }

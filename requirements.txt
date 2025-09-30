@@ -1,0 +1,9 @@
+django
+djangorestframework
+Pillow
+gunicorn
+psycopg2-binary
+python-decouple
+whitenoise
+boto3
+django-storages

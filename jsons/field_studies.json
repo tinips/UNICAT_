@@ -1,0 +1,121 @@
+[
+{
+  "model": "unicat.field_study",
+  "pk": "Agriculture & Natural Resources",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Arts",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Biology & Life Science",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Business",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Communications & Journalism",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Computers & Mathematics",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Education",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Engineering",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Health",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Humanities & Liberal Arts",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Industrial Arts & Consumer Services",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Interdisciplinary",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Law & Public Policy",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Physical Sciences",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Psychology & Social Work",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Social Science",
+  "fields": {
+    "order": 0
+  }
+},
+{
+  "model": "unicat.field_study",
+  "pk": "Other",
+  "fields": {
+    "order": 1
+  }
+}
+]

@@ -1,0 +1,716 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+
+{% block title %}
+    {{ program.university }} - Exchange Program
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/bookmark-icon-erasmus.css' %}?{% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'unicat/css/erasmus_detail.css' %}?{% now 'U' %}">
+{% endblock %}
+
+{% block body %}
+{% csrf_token %}
+<div class="container mt-5">
+    <div class="row mb-4 container-header-erasmus-detail">
+        <div class="col-md-8 div-title-erasmus">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'exchanges' %}">Exchange Programs</a></li>
+                    <li class="breadcrumb-item active">{{ program.university }}</li>
+                </ol>
+            </nav>
+            <h1 class="mb-2 university-detail-title" >{{ program.university }}</h1>
+            <h5 class="mb-3">{{ program.country_code.name }}</h5>
+        </div>
+        <div class="col-md-4 text-md-end d-flex flex-column align-items-end justify-content-md-start mt-3 mt-md-0 div-right-erasmus">
+            <!-- Container per rank i bookmark -->
+            <div class="d-flex align-items-center mb-2">
+                <!-- Bookmark icon a l'esquerra (Instagram style) -->
+                <div class="bookmark-icon me-2">
+                    <i class="favorite-icon {% if program.id in user_favorites %}fas{% else %}far{% endif %} fa-bookmark text-primary" 
+                       data-program-id="{{ program.id }}" 
+                       data-bs-toggle="tooltip" 
+                       data-bs-placement="top">
+                    </i>
+                </div>
+                
+                <!-- Rank badge a la dreta -->
+                {% if program.rank %}
+                    <span class="badge bg-primary rank-badge" style="font-size: 1rem;">
+                        <i class="fas fa-university me-1"></i>#{{ program.rank }}
+                    </span>
+                {% endif %}
+            </div>
+            
+            {% if is_registered %}
+                <button class="btn btn-success mb-2" disabled>
+                    <i class="fa fa-check-circle me-2"></i>You're Connected
+                </button>
+                <!-- Botó de desconnexió just a sota -->
+                <button class="btn btn-outline-danger" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#disconnectModal"
+                        data-program-id="{{ program.id }}" 
+                        data-program-name="{{ program.university }}">
+                    <i class="fas fa-unlink me-2"></i>Disconnect
+                </button>
+            {% else %}
+                {% if user.is_in_erasmus %}
+                    <span class="text-muted" style="width: 298px; ">
+                        <i class="fas fa-info-circle me-1"></i>Already connected to another program
+                    </span>
+                {% else %}
+                    <a href="{% url 'exchanges_form_with_program' program.id 1 %}" class="btn btn-primary">
+                        <i class="fa fa-plus-circle me-2"></i>Connect with Students
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">About This Exchange</h5>
+                </div>
+                <div class="card-body">
+                    <p>This exchange program connects students heading to {{ program.university }} in {{ program.country_code.name }} for their exchange experience. Connect with fellow students to share accommodation, travel tips and make friends before you arrive!</p>
+
+                    {% if is_registered %}
+                    <div class="alert alert-success">
+                        <i class="fa fa-info-circle me-2"></i>You are registered for this program. Your contact information is visible to other participants.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Program Participants ({{ participants.count }})</h5>
+        </div>
+
+        <div class="card-body">
+            {% if participants %}
+                <div class="table-responsive participants-table-container">
+                    <table class="table table-hover participants-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Contact Information</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Interests</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for participant in participants %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center ">
+                                        <div>
+                                            <a href="{% url 'user_profile' participant.user.username %}" class="fw-bold text-decoration-none">{{ participant.user.get_full_name }}</a>
+                                            {% if participant.user.username == username %}
+                                                <span class="badge bg-primary ms-2">You</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ participant.contact_info }}</td>
+                                <td>{{ participant.start_date|date:"d M, Y" }}</td>
+                                <td>{{ participant.end_date|date:"d M, Y" }}</td>
+                                <td>
+                                    {% if participant.interests %}
+                                        {{ participant.interests|truncatechars:50 }}
+                                    {% else %}
+                                        <span class="text-muted">Not specified</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+           
+                    
+            {% else %}
+                {% if is_registered_in_any_program %}
+                <div class="text-center py-5">
+                    <i class="fa fa-users fa-3x text-muted mb-3"></i>
+                    <h4>No participants yet</h4>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fa fa-users fa-3x text-muted mb-3"></i>
+                    <h4>No participants yet</h4>
+                
+
+                    <p class="text-muted">Be the first to join this exchange program!</p>
+                        <a href="{% url 'exchanges_form_with_program' program.id %}" class="btn btn-primary mt-2">
+                            Join Program
+                        </a>
+                </div>
+                    {% endif %}
+                
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- University Rankings Section -->
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">University Rankings</h5>
+                    <button class="toggle-btn btn btn-light btn-sm d-flex align-items-center" aria-expanded="false" data-target="#secret">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        <span>Detailed Scores</span>
+                        <i class="fas fa-chevron-down ms-2 toggle-icon"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Academic Ranking Section -->
+                        <div class="col-md-12">
+                            <div class="ranking-box text-center p-4 rounded mb-3">
+                                <h6 class="text-muted mb-2">Academic World Ranking</h6>
+                                {% if program.rank %}
+                                    <div class="position-relative d-inline-block">
+                                        <i class="fas fa-university text-primary" style="font-size: 2.5rem;"></i>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                                            #{{ program.rank }}
+                                        </span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <p class="mb-0">Overall Score: <strong>{{ program.overall_score|default:"N/A" }}</strong></p>
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">No ranking data available</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detailed Scores Section (Collapsible) -->
+                    <div class="panel" id="secret" role="region">
+                        <div class="mt-4 pt-4 border-top">
+                            <h5 class="mb-4">Detailed Performance Indicators</h5>
+                            <div class="row">
+                                {% if program.ar_score %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="score-item score-hover" data-bs-toggle="tooltip" title="Shows how well-regarded the university is among academics worldwide">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span><i class="fas fa-graduation-cap text-primary me-2"></i> Academic Reputation</span>
+                                            <span class="text-end">{{ program.ar_score|floatformat:1 }}/100 <small class="text-muted">(Rank: {{ program.ar_rank|default:"N/A" }})</small></span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-primary" role="progressbar" style="width: {{ program.ar_score }}%" aria-valuenow="{{ program.ar_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if program.er_score %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="score-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span><i class="fas fa-briefcase text-success me-2"></i> Employer Reputation</span>
+                                            <span class="text-end">{{ program.er_score|floatformat:1 }}/100 <small class="text-muted">(Rank: {{ program.er_rank|default:"N/A" }})</small></span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ program.er_score }}%" aria-valuenow="{{ program.er_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if program.fsr_score %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="score-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span><i class="fas fa-user-tie text-info me-2"></i> Faculty/Student Ratio</span>
+                                            <span class="text-end">{{ program.fsr_score|floatformat:1 }}/100 <small class="text-muted">(Rank: {{ program.fsr_rank|default:"N/A" }})</small></span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ program.fsr_score }}%" aria-valuenow="{{ program.fsr_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if program.cpf_score %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="score-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span><i class="fas fa-quote-left text-warning me-2"></i> Citations per Faculty</span>
+                                            <span class="text-end">{{ program.cpf_score|floatformat:1 }}/100 <small class="text-muted">(Rank: {{ program.cpf_rank|default:"N/A" }})</small></span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ program.cpf_score }}%" aria-valuenow="{{ program.cpf_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if program.ifr_score %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="score-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span><i class="fas fa-globe-europe text-purple me-2"></i> International Faculty</span>
+                                            <span class="text-end">{{ program.ifr_score|floatformat:1 }}/100 <small class="text-muted">(Rank: {{ program.ifr_rank|default:"N/A" }})</small></span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-purple" role="progressbar" style="width: {{ program.ifr_score }}%" aria-valuenow="{{ program.ifr_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if program.isr_score %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="score-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span><i class="fas fa-users text-danger me-2"></i> International Students</span>
+                                            <span class="text-end">{{ program.isr_score|floatformat:1 }}/100 <small class="text-muted">(Rank: {{ program.isr_rank|default:"N/A" }})</small></span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ program.isr_score }}%" aria-valuenow="{{ program.isr_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if program.irn_score %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="score-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span><i class="fas fa-project-diagram text-secondary me-2"></i> Research Network</span>
+                                            <span class="text-end">{{ program.irn_score|floatformat:1 }}/100 <small class="text-muted">(Rank: {{ program.irn_rank|default:"N/A" }})</small></span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ program.irn_score }}%" aria-valuenow="{{ program.irn_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if program.ger_score %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="score-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span><i class="fas fa-user-graduate text-info me-2"></i> Graduate Employability</span>
+                                            <span class="text-end">{{ program.ger_score|floatformat:1 }}/100 <small class="text-muted">(Rank: {{ program.ger_rank|default:"N/A" }})</small></span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ program.ger_score }}%" aria-valuenow="{{ program.ger_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if program.sus_score %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="score-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span><i class="fas fa-leaf text-success me-2"></i> Sustainability</span>
+                                            <span class="text-end">{{ program.sus_score|floatformat:1 }}/100 <small class="text-muted">(Rank: {{ program.sus_rank|default:"N/A" }})</small></span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ program.sus_score }}%" aria-valuenow="{{ program.sus_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="text-center mt-3">
+                                <p class="text-muted small">
+                                    <i class="fas fa-info-circle me-1"></i> These scores are collected from QS World University Rankings and represent the university's global performance.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Experiences Ratings</h5>
+                    <button class="toggle-btn btn btn-light btn-sm d-flex align-items-center" aria-expanded="false" data-target="#secret2">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        <span>Detailed Ratings</span>
+                        <i class="fas fa-chevron-down ms-2 toggle-icon"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Experience Ranking Section -->
+                        <div class="col-md-12">
+                            <div class="ranking-box p-4 rounded mb-3">
+                                <h6 class="text-muted mb-2 text-center">Average Experience Rating</h6>
+                                
+                                <div class="mt-3">
+                                    <div class="position-relative">
+                                        <div class="average-stars-display text-center" style="font-size: 1.5rem; letter-spacing: -1px;">
+                                        {% if program.average_rating %}
+                                            {% for _ in "12345" %}
+                                            {% if forloop.counter <= full_stars %}
+                                                {# Estrella plena #}
+                                                <i class="fas fa-star text-warning"></i>
+                                            {% elif forloop.counter == full_stars|add:"1" and has_half_star %}
+                                                {# Exactament una posició després de les plenes i hi ha mitja estrella #}
+                                                <i class="fas fa-star-half-alt text-warning"></i>
+                                            {% else %}
+                                                {# Només buides #}
+                                                <i class="far fa-star text-warning"></i>
+                                            {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            {# Si no hi ha valoració, 5 buides #}
+                                            {% for _ in "12345" %}
+                                            <i class="far fa-star text-warning"></i>
+                                            {% endfor %}
+                                        {% endif %}
+                                        </div>
+                                        
+
+                                        
+                                        <!-- Review count on the side -->
+                                        <div class="position-absolute top-50 end-0 translate-middle-y">
+                                            <small class="text-muted fs-6">
+                                                {% if program.reviews.count > 0 %}
+                                                    {{ program.reviews.count }} review{{ program.reviews.count|pluralize }}
+                                                {% else %}
+                                                    No reviews yet
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    
+                                    {% if program.average_rating %}
+                                    <div class="text-center mt-1">
+                                        <strong class="text-dark">{{ program.average_rating|floatformat:1 }}</strong>
+                                        <span class="text-muted">/ 5</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel" id="secret2" role="region">
+    <div class="mt-4 pt-4 border-top">
+        <h5 class="mb-4">Experiences Ratings</h5>
+        <div class="row">
+            <!-- Mostrar formulari només si l'usuari no ha fet review -->
+            {% if is_registered and not user_has_reviewed %}
+                <!-- Form para añadir reviews -->
+                <div class="col-md-6 mb-4">
+                    <div class="card border">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Share Your Experience</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{% url 'exchanges_add_review' program.id %}" id="review-form">
+                                {% csrf_token %}
+                                
+                                <!-- Overall Rating - Integer Only -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Overall Rating <span class="text-danger">*</span></label>
+                                        <div class="star-rating" data-integer-only="true" data-required="true">
+                                            <input type="hidden" name="rating" id="rating-input" value="0" required>
+                                            <div class="stars">
+                                                <i class="far fa-star" data-value="1"></i>
+                                                <i class="far fa-star" data-value="2"></i>
+                                                <i class="far fa-star" data-value="3"></i>
+                                                <i class="far fa-star" data-value="4"></i>
+                                                <i class="far fa-star" data-value="5"></i>
+                                            </div>
+                                            <span class="rating-value">0</span>
+                                        </div>
+                                        <!-- Missatge d'error per validació -->
+                                        <div class="invalid-feedback d-none" id="rating-error">
+                                            Please select a rating
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Academic Quality</label>
+                                        <div class="star-rating">
+                                            <input type="hidden" name="academic_rating" id="academic-rating-input" value="0">
+                                            <div class="stars">
+                                                <i class="far fa-star" data-value="1"></i>
+                                                <i class="far fa-star" data-value="2"></i>
+                                                <i class="far fa-star" data-value="3"></i>
+                                                <i class="far fa-star" data-value="4"></i>
+                                                <i class="far fa-star" data-value="5"></i>
+                                            </div>
+                                            <span class="rating-value">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Housing Rating -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Housing & Facilities</label>
+                                        <div class="star-rating">
+                                            <input type="hidden" name="housing_rating" id="housing-rating-input" value="0">
+                                            <div class="stars">
+                                                <i class="far fa-star" data-value="1"></i>
+                                                <i class="far fa-star" data-value="2"></i>
+                                                <i class="far fa-star" data-value="3"></i>
+                                                <i class="far fa-star" data-value="4"></i>
+                                                <i class="far fa-star" data-value="5"></i>
+                                            </div>
+                                            <span class="rating-value">0</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Social Life</label>
+                                        <div class="star-rating">
+                                            <input type="hidden" name="social_rating" id="social-rating-input" value="0">
+                                            <div class="stars">
+                                                <i class="far fa-star" data-value="1"></i>
+                                                <i class="far fa-star" data-value="2"></i>
+                                                <i class="far fa-star" data-value="3"></i>
+                                                <i class="far fa-star" data-value="4"></i>
+                                                <i class="far fa-star" data-value="5"></i>
+                                            </div>
+                                            <span class="rating-value">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- City & Culture Rating -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">City & Culture</label>
+                                        <div class="star-rating">
+                                            <input type="hidden" name="city_rating" id="city-rating-input" value="0">
+                                            <div class="stars">
+                                                <i class="far fa-star" data-value="1"></i>
+                                                <i class="far fa-star" data-value="2"></i>
+                                                <i class="far fa-star" data-value="3"></i>
+                                                <i class="far fa-star" data-value="4"></i>
+                                                <i class="far fa-star" data-value="5"></i>
+                                            </div>
+                                            <span class="rating-value">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Review text -->
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Your Review <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="review_text" rows="4" placeholder="Share your experience with this university..." required></textarea>
+                                </div>
+                                
+                                <!-- Tips for future students -->
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Tips for Future Students</label>
+                                    <textarea class="form-control" name="tips" rows="2" placeholder="Any advice or tips for future exchange students?"></textarea>
+                                </div>
+                                
+                                <!-- Submit button -->
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-1"></i> Submit Review
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Student Reviews ocupen només 6 columnes quan hi ha formulari -->
+                <div class="col-md-6 mb-4">
+            {% else %}
+                <!-- Si l'usuari no està registrat o ja ha fet review, mostrar missatge informatiu -->
+                {% if user_has_reviewed %}
+                    <div class="col-12 mb-4">
+                        <div class="alert alert-success text-center">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Thank you for sharing your review!</strong> You can see all reviews below.
+                        </div>
+                    </div>
+                {% elif not is_registered %}
+                    <div class="col-12 mb-4">
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Register for this program to share your experience and read detailed reviews!</strong>
+                        </div>
+                    </div>
+                
+                {% endif %}
+                
+                <!-- Student Reviews ocupen tot l'ample (12 columnes) -->
+                <div class="col-12 mb-4">
+            {% endif %}
+            
+                <!-- Contingut de Student Reviews -->
+                <div class="reviews-container">
+                    <h6 class="mb-3">Student Reviews ({{ reviews.count|default:"0" }})</h6>
+                    <div class="reviews-widget mb-4">
+                        <!-- Rating breakdown only -->
+                        <ul id="breakdown" class="rating-breakdown">
+                            {% for star, pct in program.reviews_breakdown %}
+                                <li class="rating-row {% if pct > 0 %}clickable{% else %}disabled{% endif %}" data-star-filter="{{ star }}">
+                                    <div class="stars-label">
+                                        <span class="star-count">
+                                            {{ star }} star{% if star > 1 %}s{% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="bar">
+                                        <div class="fill" style="width: {{ pct }}%;"></div>
+                                    </div>
+                                    <div class="percent">{{ pct }}%</div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    {% if reviews %}
+                        <div class="reviews-list">
+                            {% for review in reviews %}
+                                <div class="review-item card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div>
+                                                <a href="{% url 'user_profile' review.user.username %}" class="fw-bold text-decoration-none">{{ review.user.username }}</a>
+                                                <!-- Afegir indicador si és la review de l'usuari actual -->
+                                                {% if review.user == request.user %}
+                                                    <span class="badge bg-primary ms-2">Your Review</span>
+                                                {% endif %}
+                                                <span class="text-muted small ms-2">{{ review.created_at|date:"d M, Y" }}</span>
+                                            </div>
+                                            <div class="stars-display" style="letter-spacing: -1px;">
+                                                {% for _ in "12345" %}
+                                                    {% if forloop.counter <= review.rating %}
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star text-warning"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="review-text mb-2">{{ review.review_text }}</p>
+                                        
+                                        {% if review.tips %}
+                                            <div class="tips-section mt-2 p-2 bg-light rounded">
+                                                <small class="fw-bold"><i class="fas fa-lightbulb text-warning me-1"></i> Tips:</small>
+                                                <p class="small mb-0">{{ review.tips }}</p>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <div class="ratings-details mt-2">
+                                            <div class="row g-2 small">
+                                                {% if review.academic_rating != None and review.academic_rating != 0.0 %}
+                                                <div class="col-6">
+                                                    <span class="text-muted">Academic:</span> 
+                                                    <span class="ms-1">{{ review.academic_rating }}/5</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if review.housing_rating != None and review.housing_rating != 0.0 %}
+                                                <div class="col-6">
+                                                    <span class="text-muted">Housing:</span>
+                                                    <span class="ms-1">{{ review.housing_rating }}/5</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if review.social_rating != None and review.social_rating != 0.0 %}
+                                                <div class="col-6">
+                                                    <span class="text-muted">Social:</span>
+                                                    <span class="ms-1">{{ review.social_rating }}/5</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if review.city_rating != None and review.city_rating != 0.0 %}
+                                                <div class="col-6">
+                                                    <span class="text-muted">City:</span>
+                                                    <span class="ms-1">{{ review.city_rating }}/5</span>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if reviews.has_other_pages %}
+                            <div class="pagination-container d-flex justify-content-center mt-3">
+                                <ul class="pagination pagination-sm">
+                                    {% if reviews.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?review_page={{ reviews.previous_page_number }}">Previous</a>
+                                        </li>
+                                    {% endif %}
+                                    
+                                    {% for i in reviews.paginator.page_range %}
+                                        <li class="page-item {% if reviews.number == i %}active{% endif %}">
+                                            <a class="page-link" href="?review_page={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    
+                                    {% if reviews.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?review_page={{ reviews.next_page_number }}">Next</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="far fa-comment-alt fa-3x text-muted mb-3"></i>
+                            <p>No reviews yet. Be the first to share your experience!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+</div> <!-- Tanca el div.container aquí -->
+</div>
+
+<!-- Modal FORA del container per evitar problemes de z-index -->
+<div class="modal fade" id="disconnectModal" tabindex="-1" aria-labelledby="disconnectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="disconnectModalLabel">
+                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                    Confirm Disconnection
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to disconnect from <strong><span id="disconnect-program-name"></span></strong>?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Important:</strong> This will remove your participation from this program. You can reconnect later if needed.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancel-modal" data-bs-dismiss="modal">
+                   Cancel
+                </button>
+                <button type="button" class="btn btn-danger" id="confirm-disconnect-btn">
+                    <i class="fas fa-unlink me-2"></i>Disconnect
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'unicat/js/erasmus_detail.js' %}"></script>
+{%endblock%}

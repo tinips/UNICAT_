@@ -1,0 +1,211 @@
+.erasmus-program-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+.erasmus-program-card .card-header {
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.erasmus-program-card .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
+}
+
+.erasmus-program-card .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+.university-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.country-name {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+}
+
+.program-dates {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.no-erasmus-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border: none;
+}
+
+.no-erasmus-card .card-header {
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+.bio-section {
+    overflow-y: auto;
+    min-height: 205px;
+    max-height: 205px; /* Altura màxima per a la secció de biografia */
+    text-align: justify;
+    padding-right: 5px;
+}
+
+/* Media queries per fer responsive la bio-section */
+@media (max-width: 991px) {
+    .bio-section {
+        max-height: 300px; /* Més espai en tablets */
+    }
+}
+
+@media (max-width: 767px) {
+    .bio-section {
+        max-height: 350px; /* Encara més espai en mòbils */
+    }
+}
+
+@media (max-width: 575px) {
+    .bio-section {
+        max-height: 400px; /* Màxim espai en pantalles molt petites */
+    }
+}
+
+/* També pots fer que les cards del perfil siguin més altes en mòbil */
+@media (max-width: 767px) {
+    .profile-card, .profile-info {
+        height: auto; /* Permet que creixin segons el contingut */
+        min-height: 450px; /* Altura mínima */
+    }
+}
+
+@media (max-width: 575px) {
+    .profile-card, .profile-info {
+        height: auto;
+        min-height: 500px; /* Encara més espai en pantalles molt petites */
+    }
+}
+
+
+.activity-items-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.activity-item {
+    flex: 1;
+    min-width: 80px;
+    max-width: 120px;
+}
+
+/* Responsive adjustments for different screen sizes */
+@media (max-width: 576px) {
+    .activity-items-container {
+        gap: 10px;
+    }
+    
+    .activity-item {
+        min-width: 70px;
+        max-width: 100px;
+    }
+    
+    .activity-number {
+        font-size: 1rem !important;
+    }
+    
+    .activity-label {
+        font-size: 0.65rem !important;
+    }
+}
+
+.recent-activity-stats {
+    margin-top: 15px;
+}
+
+.activity-stat {
+    text-align: center;
+}
+
+.activity-number {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.activity-label {
+    font-size: 0.7rem;
+    display: block;
+    line-height: 1;
+}
+
+.activity-icon {
+    margin: 0 auto 4px auto;
+}
+
+/* Estils per a la imatge de perfil */
+.profile-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.profile-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.default-profile-image {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.organized-events {
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 1320px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1399px) {
+    .organized-events {
+        max-width: 1140px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .organized-events {
+        max-width: 960px;
+    }
+}
+
+@media (max-width: 991px) {
+    .organized-events {
+        max-width: 720px;
+    }
+}
+
+@media (max-width: 767px) {
+    .organized-events {
+        max-width: 540px;
+    }
+}
+
+@media (max-width: 575px) {
+    .organized-events {
+        max-width: 100%;
+        padding: 0 15px;
+    }
+}

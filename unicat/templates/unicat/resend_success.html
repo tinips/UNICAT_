@@ -1,0 +1,26 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+
+{% block title %}Email Sent - UniCat{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/login.css' %}?{% now 'U' %}">
+{% endblock %}
+
+{% block body %}
+<div class="auth-container" style="margin-top: -60px;">
+    <div class="auth-wrapper" style="margin-top: -90px;">
+        <div class="auth-form-container" style="text-align: center;">
+            <div class="auth-header">
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <h2 class="auth-title">Verification Email Sent</h2>
+                <p class="auth-subtitle">Check your email for the new verification link</p>
+            </div>
+            
+            <div class="auth-links">
+                <p><a href="{% url 'login' %}" class="auth-link">Back to Login</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

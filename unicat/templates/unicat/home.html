@@ -1,0 +1,209 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+{% block title %}
+    Welcome to Unicat - Your University Companion
+{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/home.css' %}?{% now 'U' %}">
+{% endblock %}
+{% block body %}
+<!-- Hero Section -->
+<div class="hero-section" style="padding-top: 2rem; padding-bottom: 2rem;">  
+    <div class="container py-2">  
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center hero-content">
+                <h1 class="display-6 fw-bold mb-2 text-white">Welcome to Unicat</h1>  
+                <p class="mb-3 text-white opacity-90" style="font-size: 1rem;">The community for students from all universities in Catalonia.</p>  
+                <div class="d-flex justify-content-center gap-2 flex-wrap">  
+                    <a href="{% url 'resources' %}" class="btn btn-outline-light btn-modern">
+                        <i class="fas fa-rocket me-2"></i>Explore Features
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container" style="margin-top: 1rem;"> 
+    <div class="text-center mb-3">  
+        <h2 class="section-title">What You Can Do</h2>
+        <p class="section-subtitle">Discover powerful features designed to enhance your university experience</p>
+    </div>
+
+    <div class="row g-2">  
+        <div class="col-lg-4 col-md-6">
+            <div class="card feature-card h-100">
+                <div class="card-body p-2 card-main">  
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="feature-icon d-flex align-items-center justify-content-center me-2">  
+                            <i class="fas fa-book-open text-white" style="font-size: 1rem;"></i>  
+                        </div>
+                        <h4 class="card-title mb-0 fw-bold">Academic Resources</h4>
+                    </div>
+                    <p class="card-text mb-2 text-muted">Share and discover study materials with fellow students.</p>  
+                    
+                    <div class="mb-2">  
+                        <div class="check-item">
+                            <div class="check-icon-small">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Upload and share materials</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon-small">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Find relevant resources</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon-small">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Ask questions and collaborate</span>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'resources' %}" class="btn btn-modern-small btn-main">
+                        <i class="fas fa-arrow-right me-1"></i>Explore
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card feature-card h-100">
+                <div class="card-body p-2">  
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="feature-icon d-flex align-items-center justify-content-center me-2">  
+                            <i class="fas fa-calendar-check text-white" style="font-size: 1rem;"></i>  
+                        </div>
+                        <h4 class="card-title mb-0 fw-bold">University Events</h4>
+                    </div>
+                    <p class="card-text mb-2 text-muted">Discover academic events and workshops.</p>  
+                    
+                    <div class="mb-2">  
+                        <div class="check-item">
+                            <div class="check-icon-small">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Discover upcoming events</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon-small">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            {% if user.is_institution %}
+                                <span>Create and organize events</span>
+                            {% else %}
+                                <span>Connect with organizers</span>
+                            {% endif %}
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon-small">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Get involved</span>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'events' %}" class="btn btn-modern-small btn-main">
+                        <i class="fas fa-arrow-right me-1"></i>View Events
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card feature-card h-100">
+                <div class="card-body p-2">  
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="feature-icon d-flex align-items-center justify-content-center me-2">  
+                            <i class="fas fa-globe-europe text-white" style="font-size: 1rem;"></i>  
+                        </div>
+                        <h4 class="card-title mb-0 fw-bold">Exchange Connect</h4>
+                    </div>
+                    <p class="card-text mb-2 text-muted">Connect with students going to the same destination.</p>  
+                    
+                    <div class="mb-2">  
+                        <div class="check-item">
+                            <div class="check-icon-small">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Find destination buddies</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon-small">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Share travel tips</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon-small">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Discover best destinations</span>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'exchanges' %}" class="btn btn-modern-small btn-main">
+                        <i class="fas fa-arrow-right me-1"></i>Connect
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="stats-section py-3">  
+    <div class="container">
+        <div class="text-center mb-3">  
+            <h3 class="section-title-small">Join Our Growing Community</h3>
+            <p class="section-subtitle-small">Building connections across universities</p>
+        </div>
+        
+        <div class="row g-2">  
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="stat-card">
+                    <div class="mb-2">
+                        <i class="fas fa-users" style="font-size: 1.5rem; color: #007bff;"></i>  
+                    </div>
+                    <div class="stat-number-small">{{ user_count }}</div>
+                    <h5 class="fw-bold text-dark mb-1">Active Students</h5>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="stat-card">
+                    <div class="mb-2">
+                        <i class="fas fa-book-open" style="font-size: 1.5rem; color: #007bff;"></i>  
+                    </div>
+                    <div class="stat-number-small">{{ resource_count }}</div>
+                    <h5 class="fw-bold text-dark mb-1">Resources Shared</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="stat-card">
+                    <div class="mb-2">
+                        <i class="fas fa-calendar-alt" style="font-size: 1.5rem; color: #007bff;"></i>  
+                    </div>
+                    <div class="stat-number-small">{{ events_count }}</div>
+                    <h5 class="fw-bold text-dark mb-1">Events Created</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="stat-card">
+                    <div class="mb-2">
+                        <i class="fas fa-handshake" style="font-size: 1.5rem; color: #007bff;"></i>  
+                    </div>
+                    <div class="stat-number-small">{{ connection_count }}</div>
+                    <h5 class="fw-bold text-dark mb-1">Exchange Connections</h5>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

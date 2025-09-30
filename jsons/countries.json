@@ -1,0 +1,737 @@
+[
+{
+  "model": "unicat.country",
+  "pk": "AR",
+  "fields": {
+    "name": "Argentina"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "AM",
+  "fields": {
+    "name": "Armenia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "AU",
+  "fields": {
+    "name": "Australia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "AT",
+  "fields": {
+    "name": "Austria"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "AZ",
+  "fields": {
+    "name": "Azerbaijan"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "BH",
+  "fields": {
+    "name": "Bahrain"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "BD",
+  "fields": {
+    "name": "Bangladesh"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "BY",
+  "fields": {
+    "name": "Belarus"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "BE",
+  "fields": {
+    "name": "Belgium"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "BO",
+  "fields": {
+    "name": "Bolivia, Plurinational State of"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "BA",
+  "fields": {
+    "name": "Bosnia and Herzegovina"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "BR",
+  "fields": {
+    "name": "Brazil"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "BN",
+  "fields": {
+    "name": "Brunei Darussalam"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "BG",
+  "fields": {
+    "name": "Bulgaria"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "CA",
+  "fields": {
+    "name": "Canada"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "CL",
+  "fields": {
+    "name": "Chile"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "CN",
+  "fields": {
+    "name": "China"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "CO",
+  "fields": {
+    "name": "Colombia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "CR",
+  "fields": {
+    "name": "Costa Rica"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "HR",
+  "fields": {
+    "name": "Croatia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "CU",
+  "fields": {
+    "name": "Cuba"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "CY",
+  "fields": {
+    "name": "Cyprus"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "CZ",
+  "fields": {
+    "name": "Czechia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "DK",
+  "fields": {
+    "name": "Denmark"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "DO",
+  "fields": {
+    "name": "Dominican Republic"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "EC",
+  "fields": {
+    "name": "Ecuador"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "EG",
+  "fields": {
+    "name": "Egypt"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "EE",
+  "fields": {
+    "name": "Estonia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "ET",
+  "fields": {
+    "name": "Ethiopia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "FI",
+  "fields": {
+    "name": "Finland"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "FR",
+  "fields": {
+    "name": "France"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "GE",
+  "fields": {
+    "name": "Georgia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "DE",
+  "fields": {
+    "name": "Germany"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "GH",
+  "fields": {
+    "name": "Ghana"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "GR",
+  "fields": {
+    "name": "Greece"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "GT",
+  "fields": {
+    "name": "Guatemala"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "HN",
+  "fields": {
+    "name": "Honduras"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "HK",
+  "fields": {
+    "name": "Hong Kong"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "HU",
+  "fields": {
+    "name": "Hungary"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "IS",
+  "fields": {
+    "name": "Iceland"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "IN",
+  "fields": {
+    "name": "India"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "ID",
+  "fields": {
+    "name": "Indonesia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "IR",
+  "fields": {
+    "name": "Iran, Islamic Republic of"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "IQ",
+  "fields": {
+    "name": "Iraq"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "IE",
+  "fields": {
+    "name": "Ireland"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "IL",
+  "fields": {
+    "name": "Israel"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "IT",
+  "fields": {
+    "name": "Italy"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "JP",
+  "fields": {
+    "name": "Japan"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "JO",
+  "fields": {
+    "name": "Jordan"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "KZ",
+  "fields": {
+    "name": "Kazakhstan"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "KE",
+  "fields": {
+    "name": "Kenya"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "KR",
+  "fields": {
+    "name": "Korea, Republic of"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "KW",
+  "fields": {
+    "name": "Kuwait"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "KG",
+  "fields": {
+    "name": "Kyrgyzstan"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "LV",
+  "fields": {
+    "name": "Latvia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "LB",
+  "fields": {
+    "name": "Lebanon"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "LT",
+  "fields": {
+    "name": "Lithuania"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "LU",
+  "fields": {
+    "name": "Luxembourg"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "MO",
+  "fields": {
+    "name": "Macao"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "MY",
+  "fields": {
+    "name": "Malaysia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "MT",
+  "fields": {
+    "name": "Malta"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "MX",
+  "fields": {
+    "name": "Mexico"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "MA",
+  "fields": {
+    "name": "Morocco"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "NL",
+  "fields": {
+    "name": "Netherlands, Kingdom of the"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "NZ",
+  "fields": {
+    "name": "New Zealand"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "NG",
+  "fields": {
+    "name": "Nigeria"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "NO",
+  "fields": {
+    "name": "Norway"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "OM",
+  "fields": {
+    "name": "Oman"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "PK",
+  "fields": {
+    "name": "Pakistan"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "PS",
+  "fields": {
+    "name": "Palestine, State of"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "PA",
+  "fields": {
+    "name": "Panama"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "PY",
+  "fields": {
+    "name": "Paraguay"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "PE",
+  "fields": {
+    "name": "Peru"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "PH",
+  "fields": {
+    "name": "Philippines"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "PL",
+  "fields": {
+    "name": "Poland"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "PT",
+  "fields": {
+    "name": "Portugal"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "PR",
+  "fields": {
+    "name": "Puerto Rico"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "QA",
+  "fields": {
+    "name": "Qatar"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "RO",
+  "fields": {
+    "name": "Romania"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "RU",
+  "fields": {
+    "name": "Russian Federation"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "SA",
+  "fields": {
+    "name": "Saudi Arabia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "RS",
+  "fields": {
+    "name": "Serbia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "SG",
+  "fields": {
+    "name": "Singapore"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "SK",
+  "fields": {
+    "name": "Slovakia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "SI",
+  "fields": {
+    "name": "Slovenia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "ZA",
+  "fields": {
+    "name": "South Africa"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "ES",
+  "fields": {
+    "name": "Spain"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "LK",
+  "fields": {
+    "name": "Sri Lanka"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "SD",
+  "fields": {
+    "name": "Sudan"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "SE",
+  "fields": {
+    "name": "Sweden"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "CH",
+  "fields": {
+    "name": "Switzerland"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "SY",
+  "fields": {
+    "name": "Syrian Arab Republic"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "TW",
+  "fields": {
+    "name": "Taiwan, Province of China"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "TH",
+  "fields": {
+    "name": "Thailand"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "TN",
+  "fields": {
+    "name": "Tunisia"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "TR",
+  "fields": {
+    "name": "Turkey"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "UG",
+  "fields": {
+    "name": "Uganda"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "UA",
+  "fields": {
+    "name": "Ukraine"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "AE",
+  "fields": {
+    "name": "United Arab Emirates"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "GB",
+  "fields": {
+    "name": "United Kingdom of Great Britain and Northern Ireland"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "US",
+  "fields": {
+    "name": "United States of America"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "UY",
+  "fields": {
+    "name": "Uruguay"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "UZ",
+  "fields": {
+    "name": "Uzbekistan"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "VE",
+  "fields": {
+    "name": "Venezuela, Bolivarian Republic of"
+  }
+},
+{
+  "model": "unicat.country",
+  "pk": "VN",
+  "fields": {
+    "name": "Vietnam"
+  }
+}
+]

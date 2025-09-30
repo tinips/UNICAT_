@@ -1,0 +1,32 @@
+.bookmark-icon {
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+
+.bookmark-icon .favorite-icon {
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.bookmark-icon .favorite-icon:hover {
+    transform: scale(1.15);
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+}
+
+/* When saved (filled bookmark) - bright blue */
+.bookmark-icon .favorite-icon.fas {
+    color: #0d6efd !important; /* Bootstrap primary blue */
+}
+
+/* When not saved (outline bookmark) - slightly muted blue but still visible */
+.bookmark-icon .favorite-icon.far {
+    color: #6c757d !important; /* Bootstrap secondary gray */
+}
+
+.bookmark-icon .favorite-icon.far:hover {
+    color: #0d6efd !important; /* Turns blue on hover */
+}
+.favorite-icon{
+    font-size: 1.4rem; cursor: pointer; text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

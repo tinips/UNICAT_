@@ -1,0 +1,99 @@
+{% extends "unicat/layout.html" %}
+{% block title %}
+    Exchange Connect - Unicat
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Find Exchange Connections</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Connect with students going to the same university for their exchange program</p>
+
+                    <form method="POST" action="{% if program %}{% url 'exchanges_form_with_program' program.id %}{% else %}{% url 'exchanges_form' %}{% endif %}">
+                        {% csrf_token %}
+                        
+                       
+                        
+                        <div class="mb-3">
+                            <label for="country" class="form-label">Destination Country </label>
+                            <div class="input-group">
+                                {% if program %}
+                                    <input type="text" class="form-control bg-light" value="{{ program.country_code.name }}" readonly>
+                                    <input type="hidden" name="country_destination" value="{{ program.country_code.name }}">
+                                {% else %}
+                                    <select class="form-select" id="country" name="country_destination" required>
+                                        <option value="" disabled {% if not erasmus.country %}selected{% endif %}>Select a country</option>
+                                        {% for country in countries %}
+                                            <option value="{{ country.name }}" {% if erasmus.country == country.name %}selected{% endif %}>{{ country.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="university" class="form-label">Destination University </label>
+                            {% if program %}
+                                <input type="text" class="form-control bg-light" id="university" name="erasmus_university" 
+                                    value="{{ program.university }}" readonly required>
+                            {% else %}
+                                <input type="text" class="form-control" id="university" name="erasmus_university" 
+                                    value="{{ erasmus.university }}" required>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="startdate" class="form-label">Start Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="startdate" name="erasmus_startdate"
+                                    value="{{ erasmus.startdate|date:'Y-m-d' }}" required> 
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="enddate" class="form-label">End Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="enddate" name="erasmus_enddate"
+                                    value="{{ erasmus.enddate|date:'Y-m-d' }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contact_info" class="form-label">Contact Information <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="contact_info" name="contact_info"
+                                value="{{ erasmus.contact_info }}" placeholder="Phone or social media" required> 
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="interests" class="form-label">Interests/Hobbies</label>
+                            <textarea class="form-control" id="interests" name="interests" 
+                                rows="3" placeholder="Share what activities you enjoy">{{ erasmus.interests }}</textarea>
+                        </div>
+                           
+                        {% if main == 1 and program %}
+                        <div class="form-group mt-4 d-flex justify-content-between cancel-div">
+                            <a href="{% url 'exchanges' %}" class="btn btn-secondary cancel-btn">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Find Connections</button>
+                        </div>
+                        {%  elif program %}
+                            <div class="form-group mt-4 d-flex justify-content-between cancel-div">
+                            <a href="{% url 'exchanges_detail' program.id %}" class="btn btn-secondary cancel-btn">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Find Connections</button>
+                        </div>
+                        {% else %}
+                            <div class="form-group mt-4 d-flex justify-content-between cancel-div">
+                                <a href="{% url 'exchanges'%}" class="btn btn-secondary cancel-btn">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Find Connections</button>
+                            </div>
+                        
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

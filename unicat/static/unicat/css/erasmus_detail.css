@@ -1,0 +1,241 @@
+/* Reviews Widget */
+.reviews-widget {
+  max-width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+/* Rating Breakdown */
+.rating-breakdown {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rating-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 40px;
+  align-items: center;
+  margin: 6px 0;
+}
+
+.rating-row.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rating-row.clickable:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: translateX(5px);
+}
+
+.rating-row.active {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-left: 3px solid #007bff;
+  padding-left: 5px;
+}
+
+.rating-row.disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+.rating-row.disabled .fill {
+  background: #ccc;
+}
+
+.rating-row.disabled .percent,
+.rating-row.disabled .star-count {
+  color: #999;
+}
+
+.stars-label .star-count {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Progress Bar */
+.bar {
+  background: #eee;
+  height: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 8px;
+}
+
+.fill {
+  height: 100%;
+  width: 0;
+  background: #f0c14b;
+  transition: width 0.4s ease;
+  min-width: 0px;
+}
+
+.percent {
+  font-size: 0.9rem;
+  color: #333;
+  text-align: right;
+}
+
+/* Scrollable Containers */
+.reviews-list { 
+  max-height: 430px;
+  overflow-y: auto;
+}
+
+.table-responsive {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Star Rating Component */
+.star-rating {
+  margin-bottom: 1rem;
+}
+
+.star-rating .stars {
+  display: inline-flex;
+  cursor: pointer;
+  position: relative;
+}
+
+.star-rating .stars i {
+  color: #e4e5e9;
+  font-size: 1.5rem;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+  padding: 2px;
+}
+
+.star-rating .stars i:hover,
+.star-rating .stars i.hover {
+  color: #ffc107 !important;
+  transform: scale(1.1);
+}
+
+.star-rating .stars i.fas,
+.stars-display .fas {
+  color: #ffc107;
+}
+
+/* Half-star styling */
+.star-rating .stars i.fas.half {
+  position: relative;
+  color: transparent;
+}
+
+.star-rating .stars i.fas.half:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #ffc107;
+}
+
+.stars-display .fa-star-half-alt {
+  color: #ffc107;
+}
+
+.rating-value {
+  display: inline-block;
+  margin-left: 10px;
+  font-weight: bold;
+  color: #495057;
+}
+
+.rating-note {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-left: 0.5rem;
+}
+
+/* Validation Styles */
+.star-rating.is-invalid .stars {
+  border: 1px solid #dc3545 !important;
+  border-radius: 4px !important;
+  padding: 2px !important;
+  animation: shake 0.5s ease-in-out;
+}
+
+.invalid-feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+/* Filter and Animation Styles */
+.review-item.filtered {
+  display: none;
+}
+
+#filter-indicator {
+  animation: fadeIn 0.3s ease;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+.review-text {
+  text-align: justify;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Estils per al modal de desconnexió */
+#disconnectModal .modal-header {
+    border-bottom: 1px solid #dee2e6;
+}
+
+#disconnectModal .alert-warning {
+    border-left: 4px solid #ffc107;
+}
+
+/* Botons d'acció centrats */
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+.gap-3 {
+    gap: 1rem !important;
+}
+
+
+
+/* Participants table scrollable with sticky headers */
+.participants-table-container {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.participants-table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+  border-bottom: 2px solid #dee2e6;
+}

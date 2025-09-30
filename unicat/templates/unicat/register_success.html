@@ -1,0 +1,34 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+
+{% block title %}Check Your Email - UniCat{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/login.css' %}?{% now 'U' %}">
+{% endblock %}
+
+{% block body %}
+<div class="auth-container" style="margin-top: -60px;">
+    <div class="auth-wrapper" style="margin-top: -90px;">
+        <div class="auth-form-container" style="text-align: center;">
+            <div class="auth-header">
+                <i class="fas fa-envelope-open-text fa-3x text-primary mb-3"></i>
+                <h2 class="auth-title">Check Your Email</h2>
+                <p class="auth-subtitle">We've sent a verification link to your email address</p>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <p class="text-muted">Please click the link in your email to activate your account.</p>
+                <p class="small">
+                    Didn't receive the email? Check your spam folder or 
+                    <a href="{% url 'resend_verification' %}" class="auth-link">resend verification email</a>.
+                </p>
+            </div>
+            
+            <div class="auth-links">
+                <p><a href="{% url 'login' %}" class="auth-link">Back to Login</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

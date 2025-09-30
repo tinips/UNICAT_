@@ -1,0 +1,116 @@
+{% extends "unicat/layout.html" %}
+{% load static %}
+{% block title %}
+    Welcome to Unicat - Your University Companion
+{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'unicat/css/index.css' %}?{% now 'U' %}">
+{% endblock %}
+{% block body %}
+
+<div class="hero-section py-2" style="margin-top: -5px;">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center hero-content">
+                <h1 class="display-4 fw-bold mb-3 text-white">Welcome to <span class="text-light">UniCat</span></h1>
+                <p class="lead mb-4 text-white opacity-90">The community for students from all universities in Catalonia.</p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'login' %}" class="btn btn-light btn-modern">
+                        <i class="fas fa-sign-in-alt me-2"></i>Log In
+                    </a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-light btn-modern">
+                        <i class="fas fa-user-plus me-2"></i>Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container py-3">
+    <div class="text-center mb-4">
+        <h2 class="section-title">What UniCat Offers</h2>
+        <p class="section-subtitle">Discover everything you need to enhance your university experience</p>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-4 col-md-6">
+            <div class="card feature-card h-100">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="feature-icon d-flex align-items-center justify-content-center me-3">
+                            <i class="fas fa-calendar-alt text-white" style="font-size: 1.2rem;"></i>
+                        </div>
+                        <h4 class="card-title mb-0 fw-bold">Campus Events</h4>
+                    </div>
+                    <p class="card-text mb-3 text-muted">Discover university parties, talks, workshops, and networking events happening near you.</p>
+                    
+                   
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card feature-card h-100">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="feature-icon d-flex align-items-center justify-content-center me-3">
+                            <i class="fas fa-book-open text-white" style="font-size: 1.2rem;"></i>
+                        </div>
+                        <h4 class="card-title mb-0 fw-bold">Study Resources</h4>
+                    </div>
+                    <p class="card-text mb-3 text-muted">Study materials and resources across different academic fields. Share and discover content!</p>                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card feature-card h-100">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="feature-icon d-flex align-items-center justify-content-center me-3">
+                            <i class="fas fa-globe-europe text-white" style="font-size: 1.2rem;"></i>
+                        </div>
+                        <h4 class="card-title mb-0 fw-bold">Exchange Network</h4>
+                    </div>
+                    <p class="card-text mb-3 text-muted">Going on Exchange? Find students heading to the same university.</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Why Choose Section -->
+<div class="why-section py-3">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h3 class="section-title">Why Choose UniCat?</h3>
+            <p class="section-subtitle">Everything you need for university life in one place</p>        </div>
+        
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="benefit-card">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-bolt benefit-icon" style="font-size: 1.5rem;"></i>
+                        <h5 class="mb-0 fw-bold">Student-Driven</h5>
+                    </div>
+                    <p class="text-muted mb-0">A platform created by and for students in Catalonia, understanding your real needs.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="benefit-card">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-puzzle-piece benefit-icon" style="font-size: 1.5rem;"></i>
+                        <h5 class="mb-0 fw-bold">Local Community</h5>
+                    </div>
+                    <p class="text-muted mb-0">Connect with students in your area and participate in events happening nearby.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
