@@ -1,4 +1,4 @@
-# UniCat — CS50W Final Project
+# UniCat — a platform where university students connect
 
 UniCat is a Django-based web platform to connect university students across Catalonia.  
 It provides a place to **share academic resources**, **discover/post university events**, and **connect Erasmus students** going to the same universities.  
