@@ -63,7 +63,7 @@ You can visit the live app and create an account here:
 ## 🔗 More Information
 
 I wrote 3 detailed posts on LinkedIn explaining the project:  
-👉 [My LinkedIn Profile](https://www.linkedin.com/in/albertárboles)
+👉 [My LinkedIn Profile](https://www.linkedin.com/in/albert-arboles/recent-activity/all/)
 
 ## 👤 Author
 
